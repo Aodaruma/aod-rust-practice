@@ -1,0 +1,24 @@
+[favorites.cpws]
+description = "Competitive programming workspace"
+git = "https://github.com/yourname/cp-templates.git"
+subfolder = "workspace"
+
+[favorites.ps]
+description = "Problemset package"
+git = "https://github.com/yourname/cp-templates.git"
+subfolder = "problemset"
+
+[favorites.ps.values]
+edition = "2024"
+use_proconio = true
+with_bruteforce = true
+with_tests = true
+
+[favorites.sp]
+description = "Single problem into current package"
+git = "https://github.com/yourname/cp-templates.git"
+subfolder = "single-problem"
+init = true
+
+[favorites.sp.values]
+use_proconio = true
