@@ -1,0 +1,174 @@
+# Path to the test file (Liquid template)
+#
+# Variables:
+#
+# - `manifest_dir`: Package directory
+# - `contest`:      Contest ID (e.g. "abc100")
+# - `bin_name`:     Name of a `bin` target (e.g. "abc100-a")
+# - `bin_alias`:    "Alias" for a `bin` target defined in `pacakge.metadata.cargo-compete` (e.g. "a")
+# - `problem`:      Alias for `bin_alias` (deprecated)
+#
+# Additional filters:
+#
+# - `kebabcase`: Convert to kebab case (by using the `heck` crate)
+test-suite = "{{ manifest_dir }}/testcases/{{ bin_alias }}.yml"
+
+# Open files with the command (`jq` command that outputs `string[] | string[][]`)
+#
+# VSCode:
+open = '[["code", "-a", .manifest_dir], ["code"] + (.paths | map([.src, .test_suite]) | flatten)]'
+# Emacs:
+#open = '["emacsclient", "-n"] + (.paths | map([.src, .test_suite]) | flatten)'
+
+[template]
+src = '''
+use proconio::input;
+
+fn main() {
+    todo!();
+}
+'''
+
+template.new.edition = "2024"
+
+[template.new]
+# `edition` for `Cargo.toml`.
+# `profile` for `Cargo.toml`.
+#
+# By setting this, you can run tests with `opt-level=3` while enabling `debug-assertions` and `overflow-checks`.
+#profile = '''
+#[dev]
+#opt-level = 3
+#'''
+dependencies = '''
+num.workspace = true
+num-bigint.workspace = true
+num-complex.workspace = true
+num-integer.workspace = true
+num-iter.workspace = true
+num-rational.workspace = true
+num-traits.workspace = true
+num-derive.workspace = true
+ac-library-rs.workspace = true
+alga.workspace = true
+amplify.workspace = true
+amplify_derive.workspace = true
+amplify_num.workspace = true
+argio.workspace = true
+ascii.workspace = true
+az.workspace = true
+bitset-fixed.workspace = true
+bitvec.workspace = true
+bstr.workspace = true
+btreemultimap.workspace = true
+counter.workspace = true
+easy-ext.workspace = true
+either.workspace = true
+fixedbitset.workspace = true
+getrandom.workspace = true
+glidesort.workspace = true
+hashbag.workspace = true
+im-rc.workspace = true
+indexing = { workspace = true, features = ["experimental_pointer_ranges"] }
+indexmap.workspace = true
+itertools.workspace = true
+itertools-num.workspace = true
+lazy_static.workspace = true
+libm.workspace = true
+maplit.workspace = true
+memoise.workspace = true
+multimap.workspace = true
+multiversion.workspace = true
+nalgebra.workspace = true
+ndarray.workspace = true
+omniswap.workspace = true
+once_cell.workspace = true
+ordered-float.workspace = true
+pathfinding.workspace = true
+permutohedron.workspace = true
+petgraph.workspace = true
+primal.workspace = true
+proconio = { workspace = true, features = ["derive"] }
+rand = { workspace = true, features = ["small_rng", "thread_rng", "os_rng"] }
+rand_chacha.workspace = true
+rand_core.workspace = true
+rand_distr.workspace = true
+rand_hc.workspace = true
+rand_pcg.workspace = true
+rand_xorshift.workspace = true
+rand_xoshiro.workspace = true
+recur-fn.workspace = true
+regex.workspace = true
+rpds.workspace = true
+rustc-hash.workspace = true
+smallvec.workspace = true
+static_assertions.workspace = true
+statrs.workspace = true
+superslice.workspace = true
+tap.workspace = true
+text_io.workspace = true
+thiserror.workspace = true
+varisat.workspace = true
+'''
+dev-dependencies = '''
+#atcoder-202004-lock = { git = "https://github.com/qryxip/atcoder-202004-lock" }
+'''
+
+[template.new.copy-files]
+"./template-cargo-lock.toml" = "Cargo.lock"
+
+[new]
+kind = "cargo-compete"
+# Platform
+#
+# - atcoder
+# - codeforces
+# - yukicoder
+platform = "atcoder"
+# Path (Liquid template)
+#
+# Variables:
+#
+# - `contest`:      Contest ID. **May be nil**
+# - `package_name`: Package name
+path = "./contests/{{ contest }}"
+
+#[new]
+#kind = "oj-api"
+#url = "https://atcoder.jp/contests/{{ id }}"
+#path = "./{{ contest }}"
+
+# for Library-Checker
+#[add]
+#url = "https://judge.yosupo.jp/problem/{{ args[0] }}"
+##is-contest = ["false"] # optional
+##target-kind = "bin" # ["bin", "example"]. default to "bin"
+#bin-name = '{{ args[0] }}'
+##bin-alias = '{{ args[0] }}' # optional
+##bin-src-path = './src/bin/{{ bin_alias }}.rs' # optional
+
+# for yukicoder
+#[add]
+#url = '{% case args[0] %}{% when "contest" %}https://yukicoder.me/contests/{{ args[1] }}{% when "problem" %}https://yukicoder.me/problems/no/{{ args[1] }}{% endcase %}'
+#is-contest = ["bash", "-c", '[[ $(cut -d / -f 4) == "contests" ]]'] # optional
+##target-kind = "bin" # ["bin", "example"]. default to "bin"
+#bin-name = '{% assign segments = url | split: "/" %}{{ segments[5] }}'
+##bin-alias = '{% assign segments = url | split: "/" %}{{ segments[5] }}' # optional
+##bin-src-path = './src/bin/{{ bin_alias }}.rs' # optional
+
+[test]
+# Toolchain for the test. (optional)
+# toolchain = "1.89.0"
+# Profile for `cargo build`. ("dev" | "release")
+#
+# Defaults to `"dev"`.
+#profile = "dev"
+
+[submit]
+kind = "file"
+path = "{{ src_path }}"
+language_id = "4050"
+#[submit]
+#kind = "command"
+#args = ["cargo", "equip", "--exclude-atcoder-crates", "--resolve-cfgs", "--remove", "docs", "--minify", "libs", "--rustfmt", "--check", "--bin", "{{ bin_name }}"]
+#language_id = "4050"
